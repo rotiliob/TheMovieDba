@@ -29,6 +29,8 @@ public class DetailTmDbFragment extends Fragment {
         detailTmDbFragment.setArguments(bundle);
         return detailTmDbFragment;
     }
+
+
      TextView originalTitle    ;
 
      TextView releaseDate      ;
@@ -63,7 +65,7 @@ public class DetailTmDbFragment extends Fragment {
             });
         }
 
-        Result result = (Result) getActivity().getIntent().getSerializableExtra("result");
+        Result result = (Result) getArguments().get("result");
         if (getResources().getBoolean(R.bool.phone)){
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout)
                     getView().findViewById(R.id.toolbar_layout);
