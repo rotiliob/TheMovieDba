@@ -30,7 +30,6 @@ public class DetailTmDbFragment extends Fragment {
         return detailTmDbFragment;
     }
 
-
      TextView originalTitle    ;
 
      TextView releaseDate      ;
@@ -48,9 +47,17 @@ public class DetailTmDbFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_tm_db, container, false);
 
+        Result result;
+        if (getResources().getBoolean(R.bool.tablet)) {
+            result = (Result) getArguments().get("result");
+        }else {
+            result = (Result) getActivity().getIntent().getSerializableExtra("result");
+        }
+
 
         if (getResources().getBoolean(R.bool.phone)) {
              Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            toolbar.setTitle(result.getTitle());
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -65,12 +72,6 @@ public class DetailTmDbFragment extends Fragment {
             });
         }
 
-        Result result = (Result) getArguments().get("result");
-        if (getResources().getBoolean(R.bool.phone)){
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout)
-                    getView().findViewById(R.id.toolbar_layout);
-            appBarLayout.setTitle(result.getTitle());
-        }
         ImageView imgBackdropPath = (ImageView) view.findViewById(R.id.item_poster_patch);
            String imageUr1 = String.format("%s%s%s", "https://image.tmdb.org/t/p/", // base
                    "w1280", // size
@@ -80,16 +81,16 @@ public class DetailTmDbFragment extends Fragment {
                    .load(imageUr1)
                    .into(imgBackdropPath);
 
-
         originalTitle     = (TextView) view.findViewById(R.id.txt_original_title);
-        releaseDate       = (TextView) view.findViewById(R.id.txt_release_date);
-        original_language = (TextView) view.findViewById(R.id.txt_original_language);
-        overViewer        = (TextView) view.findViewById(R.id.txt_over_viewer);
-
-
         originalTitle.setText("Original Title: " + result.getOriginalTitle());
+
+        releaseDate       = (TextView) view.findViewById(R.id.txt_release_date);
         releaseDate.setText("Release Date: " + result.getReleaseDate());
+
+        original_language = (TextView) view.findViewById(R.id.txt_original_language);
         original_language.setText("Original Language: " + result.getOriginalLanguage());
+
+        overViewer        = (TextView) view.findViewById(R.id.txt_over_viewer);
         overViewer.setText("Overview: " + result.getOverview());
 
         return view;
