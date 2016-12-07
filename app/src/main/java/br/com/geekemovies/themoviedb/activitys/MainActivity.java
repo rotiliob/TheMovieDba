@@ -9,7 +9,7 @@ import br.com.geekemovies.themoviedb.fragments.DetailTmDbFragment;
 import br.com.geekemovies.themoviedb.interfaces.OnTmDbClick;
 import br.com.geekemovies.themoviedb.model.Result;
 
-public class MainActivity extends AppCompatActivity implements OnTmDbClick{
+public class MainActivity extends AppCompatActivity implements OnTmDbClick {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +20,16 @@ public class MainActivity extends AppCompatActivity implements OnTmDbClick{
 
     @Override
     public void onTmDbClick(Result result) {
-        if (getResources().getBoolean(R.bool.phone)){
+        if (getResources().getBoolean(R.bool.phone)) {
             Intent it = new Intent(this, DetailTmDbAct.class);
-            it.putExtra("result",result);
+            it.putExtra("result", result);
             startActivity(it);
-        } else{
-            DetailTmDbFragment detailTmDbFragment = DetailTmDbFragment.newInstance(result.getId().toString());
+        } else {
+
+            DetailTmDbFragment detailTmDbFragment = DetailTmDbFragment.newInstance(result);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_tmdb_detail,detailTmDbFragment,"result")
+                    .replace(R.id.content_tmdb_detail, detailTmDbFragment, "datail")
                     .commit();
         }
     }

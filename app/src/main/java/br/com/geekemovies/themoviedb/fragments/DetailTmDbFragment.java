@@ -21,13 +21,21 @@ import br.com.geekemovies.themoviedb.model.Result;
 
 public class DetailTmDbFragment extends Fragment {
 
-    public static DetailTmDbFragment newInstance(String result){
+    public static DetailTmDbFragment newInstance(Result result){
         Bundle bundle = new Bundle();
-        bundle.putString("result",result);
+        bundle.putSerializable("result",result);
+
         DetailTmDbFragment detailTmDbFragment = new DetailTmDbFragment();
         detailTmDbFragment.setArguments(bundle);
         return detailTmDbFragment;
     }
+     TextView originalTitle    ;
+
+     TextView releaseDate      ;
+
+     TextView original_language;
+
+     TextView overViewer       ;
 
     public DetailTmDbFragment() {
 
@@ -37,10 +45,10 @@ public class DetailTmDbFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_tm_db, container, false);
-        Result result = (Result) getActivity().getIntent().getSerializableExtra("result");
+
 
         if (getResources().getBoolean(R.bool.phone)) {
-            Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+             Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -55,7 +63,7 @@ public class DetailTmDbFragment extends Fragment {
             });
         }
 
-
+        Result result = (Result) getActivity().getIntent().getSerializableExtra("result");
         if (getResources().getBoolean(R.bool.phone)){
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout)
                     getView().findViewById(R.id.toolbar_layout);
@@ -71,16 +79,15 @@ public class DetailTmDbFragment extends Fragment {
                    .into(imgBackdropPath);
 
 
-        TextView originalTitle = (TextView) view.findViewById(R.id.txt_original_title);
+        originalTitle     = (TextView) view.findViewById(R.id.txt_original_title);
+        releaseDate       = (TextView) view.findViewById(R.id.txt_release_date);
+        original_language = (TextView) view.findViewById(R.id.txt_original_language);
+        overViewer        = (TextView) view.findViewById(R.id.txt_over_viewer);
+
+
         originalTitle.setText("Original Title: " + result.getOriginalTitle());
-
-        TextView releaseDate = (TextView) view.findViewById(R.id.txt_release_date);
         releaseDate.setText("Release Date: " + result.getReleaseDate());
-
-        TextView original_language = (TextView) view.findViewById(R.id.txt_original_language);
         original_language.setText("Original Language: " + result.getOriginalLanguage());
-
-        TextView overViewer = (TextView) view.findViewById(R.id.txt_over_viewer);
         overViewer.setText("Overview: " + result.getOverview());
 
         return view;

@@ -22,12 +22,13 @@ public class DetailTmDbAct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_tmdb);
 
-        String result = getIntent().getStringExtra("result");
-        DetailTmDbFragment detailTmDbFragment = DetailTmDbFragment.newInstance(result);
+        Result idResult = (Result) getIntent().getSerializableExtra("idResult");
+
+        DetailTmDbFragment detailTmDbFragment = DetailTmDbFragment.newInstance(idResult);
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_tmdb_detail,detailTmDbFragment,"result")
+                .add(R.id.content_tmdb_detail,detailTmDbFragment,"detail")
                 .commit();
 
 
