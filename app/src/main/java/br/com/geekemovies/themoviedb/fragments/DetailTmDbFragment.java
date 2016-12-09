@@ -16,10 +16,24 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+
 import br.com.geekemovies.themoviedb.R;
+import br.com.geekemovies.themoviedb.dataBase.DatabaseEvent;
+import br.com.geekemovies.themoviedb.dataBase.TmDbDao;
 import br.com.geekemovies.themoviedb.model.Result;
 
 public class DetailTmDbFragment extends Fragment {
+
+    TextView originalTitle    ;
+    TextView releaseDate      ;
+    TextView original_language;
+    TextView overViewer       ;
+
+    FloatingActionButton floatingActionButton;
+    Result result;
+    TmDbDao tmDbDao;
+    boolean isFavorite;
 
     public static DetailTmDbFragment newInstance(Result result){
         Bundle bundle = new Bundle();
@@ -30,14 +44,6 @@ public class DetailTmDbFragment extends Fragment {
         return detailTmDbFragment;
     }
 
-     TextView originalTitle    ;
-
-     TextView releaseDate      ;
-
-     TextView original_language;
-
-     TextView overViewer       ;
-
     public DetailTmDbFragment() {
 
     }
@@ -47,7 +53,7 @@ public class DetailTmDbFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_tm_db, container, false);
 
-        Result result;
+
         if (getResources().getBoolean(R.bool.tablet)) {
             result = (Result) getArguments().get("result");
         }else {
@@ -62,14 +68,15 @@ public class DetailTmDbFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-            FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
+            floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                   seveOrRemoveFavorite();
                 }
             });
+            changeFloatingButton();
+
         }
 
         ImageView imgBackdropPath = (ImageView) view.findViewById(R.id.item_poster_patch);
@@ -93,7 +100,36 @@ public class DetailTmDbFragment extends Fragment {
         overViewer        = (TextView) view.findViewById(R.id.txt_over_viewer);
         overViewer.setText("Overview: " + result.getOverview());
 
+        tmDbDao = TmDbDao.getInstance(getActivity().getApplication().getApplicationContext());
+        result = tmDbDao.getResult(result);
+        isFavorite = result == null ? false : true;
+
         return view;
+    }
+
+    private void changeFloatingButton() {
+        int resource = isFavorite ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp ;
+        floatingActionButton.setImageResource(resource);
+    }
+
+    public void seveOrRemoveFavorite(){
+
+        if (getResources().getBoolean(R.bool.tablet)) {
+            result = (Result) getArguments().get("result");
+        }else {
+            result = (Result) getActivity().getIntent().getSerializableExtra("result");
+        }
+
+
+        if(isFavorite){
+            tmDbDao.deleteTmDb(result);
+            isFavorite = false;
+        }else{
+            tmDbDao.insertTmDb(result);
+            isFavorite = true;
+        }
+        changeFloatingButton();
+        EventBus.getDefault().post(new DatabaseEvent());
     }
 
 }
