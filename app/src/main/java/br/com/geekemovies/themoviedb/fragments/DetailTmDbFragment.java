@@ -34,6 +34,7 @@ public class DetailTmDbFragment extends Fragment {
     Result result;
     TmDbDao tmDbDao;
     boolean isFavorite;
+    CollapsingToolbarLayout appBarLayout;
 
     public static DetailTmDbFragment newInstance(Result result){
         Bundle bundle = new Bundle();
@@ -66,18 +67,18 @@ public class DetailTmDbFragment extends Fragment {
             toolbar.setTitle(result.getTitle());
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-            floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                   seveOrRemoveFavorite();
-                }
-            });
-            changeFloatingButton();
+            appBarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.toolbar_layout);
 
         }
+
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                seveOrRemoveFavorite();
+            }
+        });
+        changeFloatingButton();
 
         ImageView imgBackdropPath = (ImageView) view.findViewById(R.id.item_poster_patch);
            String imageUr1 = String.format("%s%s%s", "https://image.tmdb.org/t/p/", // base
@@ -108,7 +109,7 @@ public class DetailTmDbFragment extends Fragment {
     }
 
     private void changeFloatingButton() {
-        int resource = isFavorite ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp ;
+        int resource = isFavorite ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp ;
         floatingActionButton.setImageResource(resource);
     }
 
@@ -119,7 +120,6 @@ public class DetailTmDbFragment extends Fragment {
         }else {
             result = (Result) getActivity().getIntent().getSerializableExtra("result");
         }
-
 
         if(isFavorite){
             tmDbDao.deleteTmDb(result);
